@@ -1,6 +1,6 @@
 ######################################################################
-# Author: Dr. Scott Heggen        TODO: Change this to your names
-# Username: heggens               TODO: Change this to your usernames
+# Author: Faryal Fatima
+# Username: fatimaf
 #
 # Assignment: T11: The Legend of Tuna: Breath of Catnip
 #
@@ -17,9 +17,9 @@
 ####################################################################################
 
 import pygame
-from t11_NPC import NPC
 from t11_player import Player
-
+from t11_NPC import NPC  # Taco Cat (Good NPC)
+from whiskers import EvilNPC  # Whiskers (Evil NPC)
 
 class Game:
     def __init__(self):
@@ -30,51 +30,128 @@ class Game:
         self.running = True
         pygame.init()
         self.screen = pygame.display.set_mode(self.size)
-        self.screen.fill('#9CBEBA')
+        pygame.display.set_caption("The Legend of Tuna: Breath of Catnip")
         self.clock = pygame.time.Clock()
+
+        # Create Tuna (player)
         self.tuna = Player(self.size)
+
+        # Create Taco Cat (Good NPC)
         self.tacocat = NPC(self.size)
 
+        # Create Whiskers (Evil NPC)
+        self.whiskers = EvilNPC(self.size)
 
     def run(self):
         """
-        Runs the game forever
-
-        :return: None
+        Runs the game loop.
         """
         while self.running:
-            # Handle game ending first
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     self.running = False
 
-            # Handle user and game events next
+            # Movement updates
+            self.tuna.movement(pygame.key.get_pressed())
+            self.tacocat.movement()
+            self.whiskers.movement()
+
+            # Clear the screen
+            self.screen.fill('#9CBEBA')
+
+            # Draw all characters
+            self.screen.blit(self.tuna.surf, self.tuna.rect)
+            self.screen.blit(self.tacocat.surf, self.tacocat.rect)
+            self.screen.blit(self.whiskers.surf, self.whiskers.rect)
+
+            # Collision: Tuna catches Taco Cat
             if pygame.sprite.spritecollide(self.tuna, [self.tacocat], False):
-                # Collision! Prints the game ending text to the screen.
                 font = pygame.font.SysFont("ComicSans", 36)
                 txt = font.render('Taco, you caught me!!', True, "darkblue")
-                self.screen.blit(txt, (self.size[0]//2, self.size[1]-100))
-            else:
-                # Keep playing!
-                self.tuna.movement(pygame.key.get_pressed())
-                self.tacocat.movement()
-                self.screen.fill('#9CBEBA')
-                self.screen.blit(self.tuna.surf, self.tuna.rect)
-                self.screen.blit(self.tacocat.surf, self.tacocat.rect)
+                self.screen.blit(txt, (self.size[0] // 2 - 150, self.size[1] - 100))
+
+            # Collision: Tuna touches Whiskers (Game Over)
+            elif pygame.sprite.spritecollide(self.tuna, [self.whiskers], False):
+                font = pygame.font.SysFont("ComicSans", 36)
+                txt = font.render('Oh no! Whiskers got you!', True, "red")
+                self.screen.blit(txt, (self.size[0] // 2 - 200, self.size[1] // 2))
+                pygame.display.update()
+                pygame.time.delay(2000)
+                self.running = False
+
+            # Optional: Taco Cat defeats Whiskers
+            elif pygame.sprite.spritecollide(self.tacocat, [self.whiskers], False):
+                print("Whiskers was defeated by Taco Cat!")
+                self.whiskers = EvilNPC(self.size)
+
+            # Update screen
             pygame.display.update()
             self.clock.tick(24)
 
         pygame.quit()
 
-
 def main():
-    """
-    Starts the cat game.
-
-    :return: None
-    """
     game = Game()
     game.run()
 
 if __name__ == "__main__":
     main()
+
+#
+# class Game:
+#     def __init__(self):
+#         """
+#         Game class for handling the game logic.
+#         """
+#         self.size = 800, 600
+#         self.running = True
+#         pygame.init()
+#         self.screen = pygame.display.set_mode(self.size)
+#         self.screen.fill('#9CBEBA')
+#         self.clock = pygame.time.Clock()
+#         self.tuna = Player(self.size)
+#         self.tacocat = NPC(self.size)
+#
+#
+#     def run(self):
+#         """
+#         Runs the game forever
+#
+#         :return: None
+#         """
+#         while self.running:
+#             # Handle game ending first
+#             for event in pygame.event.get():
+#                 if event.type == pygame.QUIT:
+#                     self.running = False
+#
+#             # Handle user and game events next
+#             if pygame.sprite.spritecollide(self.tuna, [self.tacocat], False):
+#                 # Collision! Prints the game ending text to the screen.
+#                 font = pygame.font.SysFont("ComicSans", 36)
+#                 txt = font.render('Taco, you caught me!!', True, "darkblue")
+#                 self.screen.blit(txt, (self.size[0]//2, self.size[1]-100))
+#             else:
+#                 # Keep playing!
+#                 self.tuna.movement(pygame.key.get_pressed())
+#                 self.tacocat.movement()
+#                 self.screen.fill('#9CBEBA')
+#                 self.screen.blit(self.tuna.surf, self.tuna.rect)
+#                 self.screen.blit(self.tacocat.surf, self.tacocat.rect)
+#             pygame.display.update()
+#             self.clock.tick(24)
+#
+#         pygame.quit()
+#
+#
+# def main():
+#     """
+#     Starts the cat game.
+#
+#     :return: None
+#     """
+#     game = Game()
+#     game.run()
+#
+# if __name__ == "__main__":
+#     main()
