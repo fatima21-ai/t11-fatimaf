@@ -176,7 +176,12 @@ make a design choice. We could:
      choice and why: 
 
 ```
-    **Replace This Text With Your Response**
+keep the movement() method in the parent NPC class and override it in the Bad_NPC child class.
+
+This approach works well because Good_NPC and Bad_NPC need different movement styles, 
+but they still share other logic like screen boundaries and direction handling. 
+Keeping movement() in the parent makes sense for basic NPCs like Taco Cat, and overriding it in Bad_NPC allows Whiskers to use his own Boustrophedon logic. 
+This keeps code clear and avoids duplication where it’s not needed
 ```
 
 Finally, we need to create our enemy object, Whiskers. Update **t11_game.py** to:
@@ -194,5 +199,6 @@ Finally, we need to create our enemy object, Whiskers. Update **t11_game.py** to
     How did you overcome them?
 
 ```
-    **Replace This Text With Your Response**
+    My code was not working properly. It was running without characters on the screen. However, I realized that I made mistakes in imorting and files name.
+    After making a few changes, it worked properly.
 ```
