@@ -1,6 +1,6 @@
 ######################################################################
-# Author: Dr. Scott Heggen        TODO: Change this to your names
-# Username: heggens               TODO: Change this to your usernames
+# Author: Faryal Fatima
+# Username: fatimaf
 #
 # Assignment: T11: The Legend of Tuna: Breath of Catnip
 #
